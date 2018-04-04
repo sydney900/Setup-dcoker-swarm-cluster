@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+  website:
+    image: website
+    build: 
+      context: .
+      dockerfile: DockerfileWeb
+    environment:
+      NODE_EN: =production
+      GRAPHQL_URL: http://192.168.99.100:63002/graphql
+    ports:
+      - 63001:80
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+  
+  api:
+    image: nodegraphqlserver
+    build: 
+      context: .
+      dockerfile: DockerfileApi
+    environment:
+      NODE_ENV: production
+      MONGODB_URL: mongodb://sydney:900@mongodb:27017/sydney900
+    ports:
+      - 63002:80
+    depends_on:
+      - mongodb      
+
+  mongodb:
+    image: mymongodb
+    build: 
+      context: .
+      dockerfile: DockerfileDb
+    environment:
+          - MONGO_DATA_DIR=/data/db
+    volumes:
+      - mongodata:/data/configdb 
+      - mongodata:/data/db 
+    ports:
+      - 27017:27017
+      
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "visualizer.docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redisdata:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: redis-server --appendonly yes
+      
+
+volumes:
+  mongodata:  
+  redisdata:  
+  visualizer.docker.sock:
+  
+# docker stack deploy -c docker-compose.swarm.yml nodegraphql  
+# docker service ls
