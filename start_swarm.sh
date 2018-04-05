@@ -1,5 +1,5 @@
-declare -a manager_notes=("master" "slave")
-declare -a worker_notes=("work-1" "work-2")
+declare -a manager_notes=("manager1" "manager2")
+declare -a worker_notes=("worker1" "worker2")
 
 # Now we’ll start manager nodes:
 for n in ${manager_notes[@]};do \
