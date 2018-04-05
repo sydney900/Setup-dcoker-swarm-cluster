@@ -46,7 +46,7 @@ docker-machine ssh $masternode "docker node ls"
 for n in ${worker_notes[@]};
 do
 	echo "==== $n joining swarm as worker ..."
-	docker-machine ssh $masternode \
+	docker-machine ssh $n \
 	"docker swarm join \
 	--token $worker_token \
 	--listen-addr $(docker-machine ip $n) \
@@ -61,6 +61,12 @@ docker-machine ssh $masternode "docker node ls"
 
 # Unsetting docker-machine shell variable settings
 #docker-machine env -u
+
+# docker-machine ssh manager1 "docker stack deploy -c docker-compose.swarm.yml nodegraphql"
+# docker-machine ssh manager1 "docker node ls"
+# docker-machine ssh manager1 "docker service ls"
+# docker-machine ssh manager1 "docker service inspect nodegraphql"
+# docker-machine ssh manager1 "docker service ps nodegraphql"
 
 # docker-machine ssh manager1 "docker service create -p 80:80 --name web nginx:1.13.9-alpine"
 # docker-machine ssh manager1 "docker service ls"
