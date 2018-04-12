@@ -1,18 +1,16 @@
-﻿declare -a manager_notes=("manager1" "manager2")
-declare -a worker_notes=("worker1" "worker2")
+declare -a manager_notes=("manager1" "manager2")
+declare -a worker_notes=("worker1")
 
-# start manager nodes
-for n in ${manager_notes[@]};
-do
+# Now we’ll start manager nodes:
+for n in ${manager_notes[@]};do \
    docker-machine stop $n
 done
 
-# start worker nodes:
-for n in ${worker_notes[@]};
-do
-   docker-machine stop $n
+# Now we’ll start worker nodes:
+for n in ${worker_notes[@]};do \
+   docker-machine stop $n 
 done
 
 
 # Unsetting docker-machine shell variable settings
-# docker-machine env -u
+docker-machine env -u

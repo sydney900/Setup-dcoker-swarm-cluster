@@ -58,40 +58,19 @@ done
 echo "==== show members of swarm ..."
 docker-machine ssh $masternode "docker node ls"
 
+# create local registry
+echo "==== create local registry ..."
+docker-machine ssh $masternode "docker service create --name registry --publish published=5000,target=5000 registry:2"
 
-# Unsetting docker-machine shell variable settings
-#docker-machine env -u
+# show registry serive status
+echo "==== create local registry ..."
+docker-machine ssh $masternode "docker service ls"
 
-# eval $(docker-machine env manager1)
-# docker stack deploy -c docker-compose.swarm.yml nodegraphql
+echo "==== publish local registry ..."
+docker-machine ssh $masternode "docker-compose -f docker-compose.swarm.yml publish"
 
-# docker-machine ssh manager1 "docker stack deploy -c docker-compose.swarm.yml nodegraphql"
-# docker-machine ssh manager1 "docker node ls"
-# docker-machine ssh manager1 "docker service ls"
-# docker-machine ssh manager1 "docker service inspect nodegraphql"
-# docker-machine ssh manager1 "docker service ps nodegraphql"
+echo "==== deply to swarm ..."
+docker-machine ssh $masternode "docker stack deploy --compose-file docker-compose.swarm.yml nodegraphql"
 
-# docker-machine ssh manager1 "docker service create -p 80:80 --name web nginx:1.13.9-alpine"
-# docker-machine ssh manager1 "docker service ls"
-# docker-machine ssh manager1 "docker service inspect web"
-# docker-machine ssh manager1 "docker service scale web=7"
-# docker-machine ssh manager1 "docker service ls"
-# docker-machine ssh manager1 "docker node update --availability drain worker1"
-# docker-machine ssh manager1 "docker service ps web"
-# docker-machine ssh manager1 "docker node ls"
-# docker-machine ssh manager1 "docker service scale web=5"
-# docker-machine ssh manager1 "docker service ps web"
-# docker-machine ssh manager1 "docker node update --availability active worker1"
-# docker-machine ssh manager1 "docker node inspect worker1 --pretty"
-# docker-machine ssh manager1 "docker swarm leave --force"
-# docker-machine ssh manager2 "docker node ls"
-# docker-machine ssh manager2 "docker service rm web"
-
-
-
-
-
-
-
-
-
+echo "==== show the service in the swarm ..."
+docker-machine ssh $masternode "docker stack services nodegraphql"

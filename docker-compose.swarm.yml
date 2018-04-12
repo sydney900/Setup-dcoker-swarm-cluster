@@ -2,13 +2,13 @@ version: '3'
 
 services:
   website:
-    image: website
+    image: 127.0.0.1:5000/website
     build: 
-      context: .
+      context: ../Node-GraphQL-server-and-React-client
       dockerfile: DockerfileWeb
     environment:
       NODE_EN: =production
-      GRAPHQL_URL: http://192.168.99.100:63002/graphql
+      GRAPHQL_URL: http://api:63002/graphql
     ports:
       - 63001:80
     deploy:
@@ -17,13 +17,13 @@ services:
         condition: on-failure
       resources:
         limits:
-          cpus: "0.1"
-          memory: 50M
+          cpus: "0.5"
+          memory: 800M
   
   api:
-    image: nodegraphqlserver
+    image: n127.0.0.1:5000/odegraphqlserver
     build: 
-      context: .
+      context: ../Node-GraphQL-server-and-React-client
       dockerfile: DockerfileApi
     environment:
       NODE_ENV: production
@@ -34,9 +34,9 @@ services:
       - mongodb      
 
   mongodb:
-    image: mymongodb
+    image: 127.0.0.1:5000/mymongodb
     build: 
-      context: .
+      context: ../Node-GraphQL-server-and-React-client
       dockerfile: DockerfileDb
     environment:
           - MONGO_DATA_DIR=/data/db
@@ -51,7 +51,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "visualizer.docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -71,7 +71,6 @@ services:
 volumes:
   mongodata:  
   redisdata:  
-  visualizer.docker.sock:
   
 # docker stack deploy -c docker-compose.swarm.yml nodegraphql  
 # docker service ls
