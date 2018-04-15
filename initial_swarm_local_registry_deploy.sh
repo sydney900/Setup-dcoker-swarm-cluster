@@ -58,19 +58,24 @@ done
 echo "==== show members of swarm ..."
 docker-machine ssh $masternode "docker node ls"
 
+eval $(docker-machine env $masternode)
+
 # create local registry
 echo "==== create local registry ..."
-docker-machine ssh $masternode "docker service create --name registry --publish published=5000,target=5000 registry:2"
+docker service create --name registry --publish published=5000,target=5000 registry:2
 
 # show registry serive status
 echo "==== create local registry ..."
-docker-machine ssh $masternode "docker service ls"
+docker service ls
 
-echo "==== publish local registry ..."
-docker-machine ssh $masternode "docker-compose -f docker-compose.swarm.yml publish"
+echo "==== build services ..."
+docker-compose build
+
+echo "==== publish to local registry ..."
+docker-compose push
 
 echo "==== deply to swarm ..."
-docker-machine ssh $masternode "docker stack deploy --compose-file docker-compose.swarm.yml nodegraphql"
+docker stack deploy --compose-file docker-compose.swarm.yml nodegraphql
 
 echo "==== show the service in the swarm ..."
-docker-machine ssh $masternode "docker stack services nodegraphql"
+docker stack services nodegraphql

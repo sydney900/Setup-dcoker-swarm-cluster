@@ -3,11 +3,13 @@ declare -a worker_notes=("worker1")
 
 # Now we’ll start manager nodes:
 for n in ${manager_notes[@]};do \
+   #docker-machine regenerate-certs $n
    docker-machine start $n
 done
 
 # Now we’ll start worker nodes:
 for n in ${worker_notes[@]};do \
+   #docker-machine regenerate-certs $n
    docker-machine start $n 
 done
 

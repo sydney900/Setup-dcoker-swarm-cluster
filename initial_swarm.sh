@@ -86,12 +86,3 @@ docker-machine ssh $masternode "docker node ls"
 # docker-machine ssh manager1 "docker swarm leave --force"
 # docker-machine ssh manager2 "docker node ls"
 # docker-machine ssh manager2 "docker service rm web"
-
-
-
-
-
-
-
-
-

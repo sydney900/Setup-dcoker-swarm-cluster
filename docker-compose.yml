@@ -4,26 +4,18 @@ services:
   website:
     image: 127.0.0.1:5000/website
     build: 
-      context: ../Node-GraphQL-server-and-React-client
+      context: ../Node-GraphQL-server-and-React-client/
       dockerfile: DockerfileWeb
     environment:
       NODE_EN: =production
       GRAPHQL_URL: http://api:63002/graphql
     ports:
       - 63001:80
-    deploy:
-      replicas: 5
-      restart_policy:
-        condition: on-failure
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 800M
   
   api:
     image: 127.0.0.1:5000/nodegraphqlserver
     build: 
-      context: ../Node-GraphQL-server-and-React-client
+      context: ../Node-GraphQL-server-and-React-client/
       dockerfile: DockerfileApi
     environment:
       NODE_ENV: production
@@ -36,7 +28,7 @@ services:
   mongodb:
     image: 127.0.0.1:5000/mymongodb
     build: 
-      context: ../Node-GraphQL-server-and-React-client
+      context: ../Node-GraphQL-server-and-React-client/
       dockerfile: DockerfileDb
     environment:
           - MONGO_DATA_DIR=/data/db
@@ -52,9 +44,6 @@ services:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
 
   redis:
     image: redis
@@ -62,9 +51,6 @@ services:
       - "6379:6379"
     volumes:
       - "redisdata:/data"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     command: redis-server --appendonly yes
       
 
