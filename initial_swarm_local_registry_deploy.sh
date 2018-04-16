@@ -1,11 +1,16 @@
 declare -a manager_notes=("manager1" "manager2")
-declare -a worker_notes=("worker1")
+#declare -a worker_notes=("worker1")
+declare -a worker_notes=("")
 
 # create manager nodes:
 for n in ${manager_notes[@]};
 do
    echo "==== Creating manager machine $n...";
    docker-machine create -d virtualbox $n;
+   if [ $? -ne 0 ]
+   then
+	  docker-machine start $n
+   fi   
 done
 
 # create worker nodes:
@@ -13,6 +18,10 @@ for n in ${worker_notes[@]};
 do 
    echo "==== Creating worker machine $n...";
    docker-machine create -d virtualbox $n;
+   if [ $? -ne 0 ]
+   then
+	  docker-machine start $n
+   fi
 done
 
 # setup master (first of manager_notes) node to swarm mode
@@ -75,7 +84,8 @@ echo "==== publish to local registry ..."
 docker-compose push
 
 echo "==== deply to swarm ..."
-docker stack deploy --compose-file docker-compose.swarm.yml nodegraphql
+#docker stack deploy --compose-file docker-compose.yml nodegraphql
+docker stack deploy nodegraphql
 
 echo "==== show the service in the swarm ..."
 docker stack services nodegraphql

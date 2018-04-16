@@ -1,5 +1,6 @@
 declare -a manager_notes=("manager1" "manager2")
-declare -a worker_notes=("worker1" "worker2")
+#declare -a worker_notes=("worker1")
+declare -a worker_notes=("")
 
 # Unsetting docker-machine shell variable settings
 docker-machine env -u
