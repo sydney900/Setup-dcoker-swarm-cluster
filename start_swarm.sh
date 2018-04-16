@@ -13,7 +13,7 @@ for n in ${worker_notes[@]};do \
    #docker-machine regenerate-certs $n
    docker-machine start $n 
 done
-
+#docker-machine regenerate-certs manager2
 
 # Unsetting docker-machine shell variable settings
 docker-machine env -u

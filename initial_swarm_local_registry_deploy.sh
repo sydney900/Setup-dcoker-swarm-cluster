@@ -78,14 +78,19 @@ echo "==== create local registry ..."
 docker service ls
 
 echo "==== build services ..."
+eval $(docker-machine env $masternode)
 docker-compose build
 
 echo "==== publish to local registry ..."
 docker-compose push
 
 echo "==== deply to swarm ..."
-#docker stack deploy --compose-file docker-compose.yml nodegraphql
-docker stack deploy nodegraphql
+eval $(docker-machine env $masternode)
+docker stack deploy --compose-file docker-compose.yml nodegraphql
 
 echo "==== show the service in the swarm ..."
-docker stack services nodegraphql
+docker-machine ssh $masternode "docker stack services nodegraphql"
+
+echo "==== open browser ..."
+weburl="http://"$masterip":63001"
+explorer $weburl
